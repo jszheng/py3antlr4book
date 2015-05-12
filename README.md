@@ -27,7 +27,7 @@ You may also need to use the latest runtime, just copy the source to [PythonDir]
 (r hello world)
 
 % python test_hello.py input.txt
-([] hello world)
+(r hello world)
 ```
 
 # IDE
