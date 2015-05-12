@@ -35,3 +35,17 @@ You can install the best python IDE in the world (no 'one of') from www.jetbrain
 
 The only problem is the tool take a large amount of memory just like all JAVA based IDE, you may not want to open IDEA and PyCharm at the same time. I only install IDEA and install the python community plug-in and also ANTLR4 plug-in to debug the .g4 file. 
 ![IDEA example](/img/IDEA.png)
+
+you may need to modify the project file 01-Hello.iml, replace with the path to your Python SDK path.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.4.3 (**YOUR PYTHON PATH HERE**)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+```
