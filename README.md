@@ -34,4 +34,4 @@ You may also need to use the latest runtime, just copy the source to [PythonDir]
 You can install the best python IDE in the world (no 'one of') from www.jetbrains.com. They provide two community version free of charge and just enough for the experiment here.
 
 The only problem is the tool take a large amount of memory just like all JAVA based IDE, you may not want to open IDEA and PyCharm at the same time. I only install IDEA and install the python community plug-in and also ANTLR4 plug-in to debug the .g4 file. 
-![IDEA example](img/IDEA.png)
+![IDEA example](/img/IDEA.png)
