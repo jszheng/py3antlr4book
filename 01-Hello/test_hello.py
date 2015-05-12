@@ -10,7 +10,7 @@ def main(argv):
     stream = CommonTokenStream(lexer)
     parser = HelloParser(stream)
     tree = parser.r()
-    print(tree.toStringTree())
+    print(tree.toStringTree(recog=parser))
 
 if __name__ == '__main__':
     main(sys.argv)
