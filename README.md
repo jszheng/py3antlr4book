@@ -1,5 +1,5 @@
 # py3antlr4book
-Covert ANTLR4 book source code to Py4 version. 
+Covert ANTLR4 book source code to Python 3 version. 
 
 # How to use (Windows)
 - Install Python
