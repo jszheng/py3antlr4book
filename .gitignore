@@ -5,3 +5,4 @@ __pycache__/
 *Parser.py
 *Listener.py
 *Visitor.py
+*.swp
