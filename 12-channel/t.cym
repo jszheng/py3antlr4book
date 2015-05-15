@@ -1,0 +1,2 @@
+int n = 0; // define a counter
+int i = 9;
