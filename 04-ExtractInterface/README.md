@@ -33,7 +33,7 @@ JavaLetterOrDigit
 //        [\uD800-\uDBFF] [\uDC00-\uDFFF]
 //        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
-
+- change type to datatype to avoid conflict with python keyword.
 ```
 - add function to print the original text (including hidden channel)
 ```python
