@@ -50,11 +50,8 @@ if __name__ == '__main__':
     parser = CSVParser(token_stream)
     tree = parser.top()
 
-    # this syntax allow empty field in CSV which create None Type
-    # which will cause toStringTree fail.
-    # tree is ok so just disable print for now
-    # lisp_tree_str = tree.toStringTree(recog=parser)
-    # print(lisp_tree_str)
+    lisp_tree_str = tree.toStringTree(recog=parser)
+    print(lisp_tree_str)
 
     # listener
     print("Start Walking...")
