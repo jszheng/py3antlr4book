@@ -4,5 +4,4 @@ __pycache__/
 *Lexer.py
 *Parser.py
 *Listener.py
-*Visitor.py
 *.swp
