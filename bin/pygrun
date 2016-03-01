@@ -1,20 +1,29 @@
-#!python
+#!/bin/env python
 __author__ = 'jszheng'
 import optparse
-import sys
 import os
-import importlib
+import sys
+import re
+
+# for GUI
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+# put antlr4 runtime at the same directory and uncomment these line.
+# tied run-time with antlr generate file to avoid unexpected error due to version change.
+# antlr_runtime_path = os.path.realpath(os.path.join(os.path.dirname(__file__), '.'))
+# sys.path.insert(0, antlr_runtime_path)
 from antlr4 import *
 
 
 # this is a python version of TestRig
 def beautify_lisp_string(in_string):
     indent_size = 3
-    add_indent = ' '*indent_size
+    add_indent = ' ' * indent_size
     out_string = in_string[0]  # no indent for 1st (
     indent = ''
-    for i in range(1, len(in_string)):
-        if in_string[i] == '(' and in_string[i+1] != ' ':
+    for i in range(1, len(in_string) - 1):
+        if in_string[i] == '(' and in_string[i + 1] != ' ':
             indent += add_indent
             out_string += "\n" + indent + '('
         elif in_string[i] == ')':
@@ -24,6 +33,52 @@ def beautify_lisp_string(in_string):
         else:
             out_string += in_string[i]
     return out_string
+
+
+class AntlrParserTreeViewer(QDialog):
+    def __init__(self, parent=None):
+        super(AntlrParserTreeViewer, self).__init__(parent)
+        self.re_context = re.compile(r'([\w\d_]+)Context\'\>')
+
+        self.tree = QTreeWidget()
+        self.tree.setColumnCount(4)
+        self.tree.setColumnWidth(0, 350)
+        self.tree.setColumnWidth(1, 400)
+        self.tree.setColumnWidth(2, 200)
+        self.tree.setColumnWidth(3, 200)
+        self.tree.setHeaderLabels(['name', 'Text', 'start', 'stop'])
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.tree)
+        self.setLayout(self.layout)
+
+        self.setWindowTitle('AST Tree')
+        self.resize(1200, 800)
+
+    def set_data(self, py_obj):
+        self.tree.clear()
+        self.add_sub_tree(py_obj, self.tree)
+
+    def add_sub_tree(self, node, parent):
+        widget_item = QTreeWidgetItem(parent)
+        if isinstance(node, ParserRuleContext):
+            class_name = str(type(node))
+            # print(class_name)
+            m = self.re_context.search(class_name)
+            short_name = m.group(1)
+            widget_item.setText(0, short_name)
+            widget_item.setText(1, '')
+            widget_item.setText(2, str(node.start))
+            widget_item.setText(3, str(node.stop))
+        else:
+            widget_item.setText(0, '')
+            widget_item.setText(1, node.getText())
+            widget_item.setText(2, '')
+            widget_item.setText(3, '')
+
+        if hasattr(node, 'children'):
+            for child in getattr(node, 'children'):
+                self.add_sub_tree(child, widget_item)
 
 
 if __name__ == '__main__':
@@ -40,9 +95,16 @@ if __name__ == '__main__':
     #                   help='set output file name',
     #                   )
     parser.add_option('-t', '--tree',
+                      dest="tree",
                       default=False,
                       action='store_true',
                       help='Print AST tree'
+                      )
+    parser.add_option('-g', '--gui',
+                      dest="gui",
+                      default=False,
+                      action='store_true',
+                      help='show AST tree in GUI'
                       )
     parser.add_option('-k', '--tokens',
                       dest="token",
@@ -68,8 +130,14 @@ if __name__ == '__main__':
                       action='store_true',
                       help='Enable Trace'
                       )
+    parser.add_option('-p', '--path',
+                      dest="search_path",
+                      action='append',
+                      help='seach path for Lexer/Parser files'
+                      )
 
     options, remainder = parser.parse_args()
+
     if len(remainder) < 2:
         print('ERROR: You have to provide at least 2 arguments!')
         parser.print_help()
@@ -82,35 +150,37 @@ if __name__ == '__main__':
     #############################################################
     # check and load antlr generated files
     #############################################################
+    # searching for file
+    search_path = ['.']
+    found = False
+    found_path = ''
+    if options.search_path is not None:
+        search_path += options.search_path
+    for p in search_path:
+        lexer_file = os.path.join(p, grammar + 'Lexer.py')
+        parser_file = os.path.join(p, grammar + 'Parser.py')
+        if os.path.exists(lexer_file) and os.path.exists(parser_file):
+            found = True
+            found_path = p
+            break
+    if not found:
+        print("[ERROR] Can't find lexer file {} or parser file {}!".format(grammar + 'Lexer.py', grammar + 'Parser.py'))
+        print("search path : ", search_path)
+        exit(1)
+
     # dynamic load the module and class
     lexerName = grammar + 'Lexer'
     parserName = grammar + 'Parser'
-    # check if the generate file exist
-    lexer_file = lexerName + '.py'
-    parser_file = parserName + '.py'
-    if not os.path.exists(lexer_file):
-        print("[ERROR] Can't find lexer file {}!".format(lexer_file))
-        print(os.path.realpath('.'))
-        exit(1)
-    if not os.path.exists(parser_file):
-        print("[ERROR] Can't find parser file {}!".format(lexer_file))
-        print(os.path.realpath('.'))
-        exit(1)
-
-    # current directory is where the generated file loaded
-    # the script might be in different place.
-    sys.path.append('.')
-    # print(sys.path)
+    sys.path.append(found_path)
 
     # print("Load Lexer {}".format(lexerName))
     module_lexer = __import__(lexerName, globals(), locals(), lexerName)
     class_lexer = getattr(module_lexer, lexerName)
-    # print(class_lexer)
 
     # print("Load Parser {}".format(parserName))
     module_parser = __import__(parserName, globals(), locals(), parserName)
     class_parser = getattr(module_parser, parserName)
-    # print(class_parser)
+
 
     #############################################################
     # main process steps.
@@ -130,20 +200,29 @@ if __name__ == '__main__':
         if options.diagnostics:
             parser.addErrorListener(DiagnosticErrorListener())
             parser._interp.predictionMode = PredictionMode.LL_EXACT_AMBIG_DETECTION
-        if options.tree:
+        if options.tree or options.gui:
             parser.buildParseTrees = True
         if options.sll:
             parser._interp.predictionMode = PredictionMode.SLL
-        #parser.setTokenStream(token_stream)
+        # parser.setTokenStream(token_stream)
         parser.setTrace(options.trace)
         if hasattr(parser, start_rule):
             func_start_rule = getattr(parser, start_rule)
             parser_ret = func_start_rule()
             if options.tree:
-                lisp_tree_str = parser_ret.toStringTree(recog=parser)
-                print(beautify_lisp_string(lisp_tree_str))
+                if options.gui:
+                    app = QApplication(sys.argv)
+                    viewer = AntlrParserTreeViewer()
+                    viewer.set_data(parser_ret)
+                    viewer.show()
+                    ret = app.exec_()
+                    sys.exit(ret)
+                else:
+                    lisp_tree_str = parser_ret.toStringTree(recog=parser)
+                    print(beautify_lisp_string(lisp_tree_str))
         else:
             print("[ERROR] Can't find start rule '{}' in parser '{}'".format(start_rule, parserName))
+
 
     #############################################################
     # use stdin if not provide file as input stream
