@@ -1,5 +1,6 @@
 # The build-in Error report
 
+```
 % antlr4py3 Simple.g4
 % pygrun Simple prog in1.txt
 var i
@@ -30,12 +31,15 @@ line 1:6 token recognition error at: '#'
 line 1:8 missing ID at '{'
 var i
 class <missing ID>
+```
 
 # Verbose Listener
 
+```
 % python TestE_Listener.py in7.txt
 rule stack:  ['prog', 'classDef']
 line 1 : 8 at [@2,8:8='T',<10>,1:8] : extraneous input 'T' expecting '{'
 rule stack:  ['prog', 'classDef', 'member']
 line 2 : 6 at [@5,19:19=';',<5>,2:6] : no viable alternative at input 'int;'
 class T 
+```
