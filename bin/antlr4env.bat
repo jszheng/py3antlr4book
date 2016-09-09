@@ -1,4 +1,4 @@
-SET CLASSPATH=%~dp0antlr4-4.5.1-complete.jar;.
+SET CLASSPATH=%~dp0antlr-4.5.3-complete.jar;.
 doskey antlr4=java org.antlr.v4.Tool $*
 doskey grun=java org.antlr.v4.runtime.misc.TestRig $*
 doskey antlr4py3=java org.antlr.v4.Tool -Dlanguage=Python3 $*
