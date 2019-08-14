@@ -10,7 +10,6 @@ from ExprParser import ExprParser
 if __name__ == '__main__':
     parser = ExprParser(None)
     parser.buildParseTrees = False
-    parser.memory = {}  # how to add this to generated constructor?
 
     line = sys.stdin.readline()
     lineno = 1
