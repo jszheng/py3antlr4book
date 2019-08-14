@@ -5,7 +5,18 @@ grammar Expr;
 }
 
 @parser::members {
-
+@property
+def memory(self):
+    if not hasattr(self, '_map'):
+        setattr(self, '_map', {})
+    return self._map
+    
+@memory.setter
+def memory_setter(self, value):
+    if not hasattr(self, '_map'):
+        setattr(self, '_map', {})
+    self._map = value
+    
 def eval(self, left, op, right):
     if   ExprParser.MUL == op.type:
         return left * right
