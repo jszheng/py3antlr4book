@@ -1,0 +1,15 @@
+#%Module1.0
+
+conflict antlr4
+set installdir [pwd]
+
+prepend-path CLASSPATH $installdir/antlr.jar
+
+set-alias antrl4     "java org.antlr.v4.Tool"
+set-alias grun       "java org.antlr.v4.runtime.misc.TestRig"
+set-alias antlr4py3  "java org.antlr.v4.Tool -Dlanguage=Python3"
+set-alias antlr4py2  "java org.antlr.v4.Tool -Dlanguage=Python2"
+set-alias antlr4vpy3 "java org.antlr.v4.Tool -Dlanguage=Python3 -no-listener -visitor"
+set-alias antlr4vpy2 "java org.antlr.v4.Tool -Dlanguage=Python2 -no-listener -visitor"
+set-alias pygrun     "python3 $installdir/bin/pygrun"
+
