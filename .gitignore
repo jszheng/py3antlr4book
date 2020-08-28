@@ -1,3 +1,8 @@
+.idea/
+__pycache__/
+*.tokens
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
