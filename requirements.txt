@@ -1,0 +1,3 @@
+antlr4-python3-runtime==4.8
+PySide2==5.15.0
+shiboken2==5.15.0

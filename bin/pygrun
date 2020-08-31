@@ -6,8 +6,9 @@ import sys
 import re
 
 # for GUI
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import QDialog
 
 # put antlr4 runtime at the same directory and uncomment these line.
 # tied run-time with antlr generate file to avoid unexpected error due to version change.
