@@ -15,30 +15,21 @@ from LExprListener import LExprListener
 
 
 class ContextMap(LExprListener):
-    def __init__(self):
-        self.tree_property = {}
-
-    def getValue(self, node):
-        return self.tree_property[node]
-
-    def setValue(self, node, value):
-        self.tree_property[node] = value
-
     def exitInt(self, ctx):
-        self.setValue(ctx, int(ctx.INT().getText()))
+        ctx.value = int(ctx.INT().getText())
 
     def exitAdd(self, ctx):
-        left = self.getValue(ctx.e(0))
-        right= self.getValue(ctx.e(1))
-        self.setValue(ctx, left+right)
+        left = ctx.e(0).value
+        right= ctx.e(1).value
+        ctx.value = left + right
 
     def exitMult(self, ctx):
-        left = self.getValue(ctx.e(0))
-        right= self.getValue(ctx.e(1))
-        self.setValue(ctx, left*right)
+        left = ctx.e(0).value
+        right= ctx.e(1).value
+        ctx.value = left * right
 
     def exitS(self, ctx):
-        self.setValue(ctx, self.getValue(ctx.e()))
+        ctx.value = ctx.e().value
 
 
 if __name__ == '__main__':
@@ -60,4 +51,4 @@ if __name__ == '__main__':
     listener = ContextMap()
     walker = ParseTreeWalker()
     walker.walk(listener, tree)
-    print('result_at_top =', listener.getValue(tree))
+    print('result_at_top =', tree.value)
