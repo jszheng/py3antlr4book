@@ -51,4 +51,4 @@ if __name__ == '__main__':
     listener = ContextMap()
     walker = ParseTreeWalker()
     walker.walk(listener, tree)
-    print('result_at_top =', listener.value)
+    print('result_at_top =', tree.value)
