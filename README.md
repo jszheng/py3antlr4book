@@ -27,8 +27,8 @@ git clone https://github.com/jszheng/py3antlr4book.git
 cd py3antlr4book
 # goto https://www.antlr.org/download.html 
 # download the latest ver
-wget https://www.antlr.org/download/antlr-4.7.2-complete.jar
-ln -s antlr-4.7.2-complete.jar antlr.jar
+wget -P bin/ https://www.antlr.org/download/antlr-4.11.1-complete.jar
+ln -s bin/antlr-4.11.1-complete.jar antlr.jar
 module load ./antlr4module
 ```
 
